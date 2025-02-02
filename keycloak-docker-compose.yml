@@ -1,0 +1,57 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    volumes:
+      - ./postgresql@16/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - local
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak -d keycloak"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+  keycloak:
+    image: quay.io/keycloak/keycloak:25.0.0
+    command: ["start-dev"]
+    restart: always
+    links:
+      - postgres
+    ports:
+      - "9082:8080"
+    environment:
+      KEYCLOAK_ADMIN : ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_SCHEMA: public
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_DB_URL: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      KC_HOSTNAME: localhost
+      KC_FEATURES: token-exchange,admin-fine-grained-authz
+
+      # KC_DB: postgres
+      # KC_DB_URL: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      # KC_DB_USERNAME: ${POSTGRES_USER}
+      # KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      # KC_HTTP_PORT: 8080
+      # QUARKUS_HTTP_HOST: 0.0.0.0  # Bind to all interfaces
+      # KC_HOSTNAME_STRICT: "false"  # Disable strict hostname checks
+      # KC_LOG_LEVEL: INFO
+      # KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      # KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+#      KC_HTTP_RELATIVE_PATH: /keycloak
+    networks:
+      - local
+networks:
+  local:
