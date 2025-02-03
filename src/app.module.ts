@@ -14,6 +14,7 @@ import {
   RoleGuard,
 } from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
+import { KeycloakService } from './keycloak/keycloak.service';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { APP_GUARD } from '@nestjs/core';
     LoggerService,
     AppService,
     UsersService,
+    KeycloakService,
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: ResourceGuard },
     { provide: APP_GUARD, useClass: RoleGuard },
