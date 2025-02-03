@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://keycloak.org" target="blank"><img src="https://www.keycloak.org/resources/images/logo.svg" width="120" alt="Keycloak Logo" /></a>
+  <a href="https://keycloak.org" target="blank"><img src="https://www.keycloak.org/resources/images/logo.svg" width="240" alt="Keycloak Logo" /></a>
 </p>
   <p align="center"><a href="https://keycloak.org" target="_blank">Keycloak</a> Open Source Identity and Access Management.</p>
 
