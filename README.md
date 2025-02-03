@@ -7,6 +7,21 @@
 
 Identity and Access Management using [Keycloak](https://www.keycloak.org/).
 
+## To start the keycloak docker container
+```bash
+docker-compose -f keycloak-docker-compose.yml --env-file .env up -d
+```
+
+## View logs (historical or real-time)
+
+```bash
+# historical
+docker-compose -f keycloak-docker-compose.yml logs keycloak
+
+# real-time
+docker-compose -f keycloak-docker-compose.yml logs -f keycloak
+```
+
 ## Project setup
 
 ```bash
@@ -37,21 +52,6 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
-```
-
-## To start the keycloak docker container
-```bash
-docker-compose -f keycloak-docker-compose.yml --env-file .env up -d
-```
-
-## View logs (historical or real-time)
-
-```bash
-# historical
-docker-compose -f keycloak-docker-compose.yml logs keycloak
-
-# real-time
-docker-compose -f keycloak-docker-compose.yml logs -f keycloak
 ```
 
 ## Stay in touch
