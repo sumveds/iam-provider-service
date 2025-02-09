@@ -3,9 +3,10 @@ import { HttpModule } from '@nestjs/axios';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LoggerService } from 'src/common/logger/logger.service';
+import { KeycloakModule } from 'src/keycloak/keycloak.module';
 
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, KeycloakModule],
   controllers: [AuthController],
   providers: [LoggerService, AuthService],
 })

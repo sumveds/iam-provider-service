@@ -43,4 +43,28 @@ export class AuthService {
       throw new Error(`Keycloak authentication failed: ${error.message}`);
     }
   }
+
+  async logout(refreshToken: string): Promise<any> {
+    const data = new URLSearchParams();
+    data.append('client_id', this.clientId);
+    data.append('client_secret', this.clientSecret);
+    data.append('refresh_token', refreshToken);
+
+    try {
+      const url =
+        this.keycloakDomain +
+        `/realms/${this.realm}/protocol/openid-connect/logout`;
+      const response = await firstValueFrom(
+        this.httpService.post(url, data, {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        }),
+      );
+
+      return { message: 'Logout successful' };
+    } catch (error) {
+      throw new Error(
+        `Logout failed: ${error.response?.data?.error_description || error.message}`,
+      );
+    }
+  }
 }

@@ -32,5 +32,6 @@ import { KeycloakService } from './keycloak.service';
     { provide: APP_GUARD, useClass: ResourceGuard },
     { provide: APP_GUARD, useClass: RoleGuard },
   ],
+  exports: [KeycloakConnectModule, KeycloakService],
 })
 export class KeycloakModule {}

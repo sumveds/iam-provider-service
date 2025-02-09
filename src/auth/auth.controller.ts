@@ -1,7 +1,7 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { Public } from 'nest-keycloak-connect';
+import { AuthGuard, Public } from 'nest-keycloak-connect';
 
 @Controller('auth')
 export class AuthController {
@@ -12,5 +12,14 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     const { username, password } = loginDto;
     return this.authService.authenticate(username, password);
+  }
+
+  @Post('logout')
+  @UseGuards(AuthGuard)
+  async logout(@Body('refreshToken') refreshToken: string) {
+    if (!refreshToken) {
+      return { message: 'Refresh token is required' };
+    }
+    return this.authService.logout(refreshToken);
   }
 }
