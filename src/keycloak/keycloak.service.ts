@@ -1,14 +1,12 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
-import { LoggerService } from 'src/logger/logger.service';
 
 @Injectable()
 export class KeycloakService implements OnModuleInit {
   private adminClient: KeycloakAdminClient;
 
   constructor(
-    private readonly logger: LoggerService,
     private readonly configService: ConfigService
   ) {
     this.adminClient = new KeycloakAdminClient({

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { KeycloakService } from 'src/keycloak/keycloak.service';
-import { LoggerService } from 'src/logger/logger.service';
+import { LoggerService } from 'src/common/logger/logger.service';
 import { CreateEmployeeDto, EmployeeResponseDto } from './employee.dto';
 
 @Injectable()

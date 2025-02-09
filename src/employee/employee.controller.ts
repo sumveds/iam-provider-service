@@ -14,13 +14,11 @@ import {
 } from 'nest-keycloak-connect';
 import { CreateEmployeeDto, EmployeeResponseDto } from './employee.dto';
 import { EmployeeService } from './employee.service';
-import { LoggerService } from 'src/logger/logger.service';
 
 @Controller('employees')
 @Resource('employees')
 export class EmployeeController {
   constructor(
-    private readonly loggerService: LoggerService,
     private readonly employeeService: EmployeeService,
   ) {}
 
@@ -32,7 +30,6 @@ export class EmployeeController {
   })
   @Scopes('read')
   async getAll(): Promise<EmployeeResponseDto[]> {
-    this.loggerService.log('Inside controller.getAll');
     return await this.employeeService.getAll();
   }
 
@@ -46,7 +43,6 @@ export class EmployeeController {
   async create(
     @Body() createUserDto: CreateEmployeeDto,
   ): Promise<EmployeeResponseDto> {
-    this.loggerService.log('Inside controller.create');
     return await this.employeeService.create(createUserDto);
   }
 }
