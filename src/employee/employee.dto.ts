@@ -1,8 +1,6 @@
-// src/users/dto/user.dto.ts
 import { IsEmail, IsString, IsNotEmpty, IsOptional } from 'class-validator';
 
-// Create User DTO
-export class CreateUserDto {
+export class CreateEmployeeDto {
   @IsString()
   @IsNotEmpty()
   username: string;
@@ -24,8 +22,7 @@ export class CreateUserDto {
   lastName?: string;
 }
 
-// Response User DTO
-export class UserResponseDto {
+export class EmployeeResponseDto {
   @IsString()
   id: string;
 

@@ -7,30 +7,23 @@ export class LoggerService extends Logger {
   }
 
   log(message: any, context?: string) {
-    super.log(this.formatMessage(message, context || this.context), context);
+    super.log(this.formatMessage(message, context || this.context));
   }
 
   error(message: any, trace?: string, context?: string) {
-    super.error(
-      this.formatMessage(message, context || this.context),
-      trace,
-      context,
-    );
+    super.error(this.formatMessage(message, context || this.context), trace);
   }
 
   warn(message: any, context?: string) {
-    super.warn(this.formatMessage(message, context || this.context), context);
+    super.warn(this.formatMessage(message, context || this.context));
   }
 
   debug(message: any, context?: string) {
-    super.debug(this.formatMessage(message, context || this.context), context);
+    super.debug(this.formatMessage(message, context || this.context));
   }
 
   verbose(message: any, context?: string) {
-    super.verbose(
-      this.formatMessage(message, context || this.context),
-      context,
-    );
+    super.verbose(this.formatMessage(message, context || this.context));
   }
 
   private formatMessage(message: any, context?: string): string {

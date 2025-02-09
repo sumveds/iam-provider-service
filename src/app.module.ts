@@ -1,12 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HttpModule } from '@nestjs/axios';
+import { HttpModule, HttpService } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import environment from './config/environment';
 import { LoggerService } from './logger/logger.service';
-import { UsersController } from './users/users.controller';
-import { UsersService } from './users/users.service';
 import {
   AuthGuard,
   KeycloakConnectModule,
@@ -15,6 +13,8 @@ import {
 } from 'nest-keycloak-connect';
 import { APP_GUARD } from '@nestjs/core';
 import { KeycloakService } from './keycloak/keycloak.service';
+import { EmployeeController } from './employee/employee.controller';
+import { EmployeeService } from './employee/employee.service';
 
 @Module({
   imports: [
@@ -25,22 +25,22 @@ import { KeycloakService } from './keycloak/keycloak.service';
       envFilePath: '.env.dev',
     }),
     KeycloakConnectModule.registerAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, HttpModule],
       useFactory: async (configService: ConfigService) => ({
         authServerUrl: configService.get<string>('KEYCLOAK_DOMAIN'),
         realm: configService.get<string>('KEYCLOAK_REALM'),
         clientId: configService.get<string>('KEYCLOAK_API_CLIENT_ID'),
         secret: configService.get<string>('KEYCLOAK_API_CLIENT_SECRET'),
       }),
-      inject: [ConfigService],
+      inject: [ConfigService, HttpService],
     }),
   ],
-  controllers: [AppController, UsersController],
+  controllers: [AppController, EmployeeController],
   providers: [
     LoggerService,
-    AppService,
-    UsersService,
     KeycloakService,
+    AppService,
+    EmployeeService,
     { provide: APP_GUARD, useClass: AuthGuard },
     { provide: APP_GUARD, useClass: ResourceGuard },
     { provide: APP_GUARD, useClass: RoleGuard },

@@ -1,12 +1,16 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
+import { LoggerService } from 'src/logger/logger.service';
 
 @Injectable()
 export class KeycloakService implements OnModuleInit {
   private adminClient: KeycloakAdminClient;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private readonly logger: LoggerService,
+    private readonly configService: ConfigService
+  ) {
     this.adminClient = new KeycloakAdminClient({
       baseUrl: this.configService.get<string>('KEYCLOAK_DOMAIN'),
       realmName: this.configService.get<string>('KEYCLOAK_REALM'),
@@ -35,6 +39,7 @@ export class KeycloakService implements OnModuleInit {
       const createdUser = await this.adminClient.users.create({
         realm: this.configService.get<string>('KEYCLOAK_REALM'),
         ...user,
+
       });
       return createdUser.id;
     } catch (error) {

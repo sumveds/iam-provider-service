@@ -11,9 +11,6 @@ const envValidationSchema = Joi.object({
   KEYCLOAK_REALM: Joi.string().required(),
   KEYCLOAK_API_CLIENT_ID: Joi.string().required(),
   KEYCLOAK_API_CLIENT_SECRET: Joi.string().required(),
-  KEYCLOAK_APP_CLIENT_ID: Joi.string().required(),
-  KEYCLOAK_APP_CLIENT_SECRET: Joi.string().required(),
-  KEYCLOAK_ADMIN_REDIRECT_URL: Joi.string().required(),
 });
 
 // Configuration object
@@ -36,13 +33,6 @@ export default registerAs('environment', () => {
         api: {
             clientId: envVars.KEYCLOAK_API_CLIENT_ID,
             clientSecret: envVars.KEYCLOAK_API_CLIENT_SECRET,
-        },
-        app: {
-            clientId: envVars.KEYCLOAK_APP_CLIENT_ID,
-            clientSecret: envVars.KEYCLOAK_APP_CLIENT_SECRET,
-        },
-        admin: {
-            redirectUrl: envVars.KEYCLOAK_ADMIN_REDIRECT_URL,
         },
     },
     // Add more mapped variables here
