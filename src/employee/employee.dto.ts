@@ -20,6 +20,9 @@ export class CreateEmployeeDto {
   @IsString()
   @IsOptional()
   lastName?: string;
+
+  @IsString()
+  role: string;
 }
 
 export class EmployeeResponseDto {

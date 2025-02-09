@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { KeycloakService } from 'src/keycloak/keycloak.service';
 import { LoggerService } from 'src/common/logger/logger.service';
 import { CreateEmployeeDto, EmployeeResponseDto } from './employee.dto';
+import { KeycloakUser } from 'src/common/interface/keycloak-user.interface';
 
 @Injectable()
 export class EmployeeService {
@@ -15,11 +16,8 @@ export class EmployeeService {
   ): Promise<EmployeeResponseDto> {
     try {
       const keycloakUser = this.mapToKeycloakUser(createEmployeeDto);
-      this.loggerService.log(
-        'create: Keycloak user:',
-        JSON.stringify(keycloakUser, null, 2),
-      );
-      const userId = await this.keycloakService.createUser(keycloakUser);
+      const { role } = createEmployeeDto;
+      const userId = await this.keycloakService.createUser(keycloakUser, role);
 
       return this.mapToEmployeeResponse({
         id: userId,
@@ -41,7 +39,7 @@ export class EmployeeService {
     }
   }
 
-  private mapToKeycloakUser(dto: CreateEmployeeDto) {
+  private mapToKeycloakUser(dto: CreateEmployeeDto): KeycloakUser {
     return {
       username: dto.username,
       email: dto.email,

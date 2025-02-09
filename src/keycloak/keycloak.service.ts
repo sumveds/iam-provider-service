@@ -1,13 +1,17 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import KeycloakAdminClient from '@keycloak/keycloak-admin-client';
+import { KeycloakUser } from 'src/common/interface/keycloak-user.interface';
+import { UserRepresentation } from 'src/common/interface/user-representation.interface';
+import { LoggerService } from 'src/common/logger/logger.service';
 
 @Injectable()
 export class KeycloakService implements OnModuleInit {
   private adminClient: KeycloakAdminClient;
 
   constructor(
-    private readonly configService: ConfigService
+    private readonly logger: LoggerService,
+    private readonly configService: ConfigService,
   ) {
     this.adminClient = new KeycloakAdminClient({
       baseUrl: this.configService.get<string>('KEYCLOAK_DOMAIN'),
@@ -23,7 +27,9 @@ export class KeycloakService implements OnModuleInit {
     await this.adminClient.auth({
       grantType: 'client_credentials',
       clientId: this.configService.get<string>('KEYCLOAK_API_CLIENT_ID'),
-      clientSecret: this.configService.get<string>('KEYCLOAK_API_CLIENT_SECRET'),
+      clientSecret: this.configService.get<string>(
+        'KEYCLOAK_API_CLIENT_SECRET',
+      ),
     });
   }
 
@@ -32,13 +38,35 @@ export class KeycloakService implements OnModuleInit {
    * @param user - User creation payload
    * @returns Created user ID
    */
-  async createUser(user: KeycloakUser): Promise<string> {
+  async createUser(user: KeycloakUser, roleName: string): Promise<string> {
     try {
       const createdUser = await this.adminClient.users.create({
         realm: this.configService.get<string>('KEYCLOAK_REALM'),
         ...user,
-
       });
+      /*this.logger.log(
+        'createUser: createdUser:',
+        JSON.stringify(createdUser, null, 2),
+      );
+      const role = await this.adminClient.roles.findOneByName({
+        name: roleName,
+      });
+      this.logger.log('createUser: role:', JSON.stringify(role, null, 2));
+      const roleMap = {
+        id: createdUser.id!,
+        roles: [
+          {
+            id: role.id!,
+            name: role.name!,
+          },
+        ],
+      };
+      this.logger.log(
+        'createUser: role map:',
+        JSON.stringify(roleMap, null, 2),
+      );
+      await this.adminClient.users.addRealmRoleMappings(roleMap);
+      this.logger.log('createUser: role mapping done.');*/
       return createdUser.id;
     } catch (error) {
       throw new Error(`Failed to create user: ${error.message}`);
@@ -58,32 +86,4 @@ export class KeycloakService implements OnModuleInit {
       throw new Error(`Failed to list users: ${error.message}`);
     }
   }
-}
-
-// Type definitions
-interface KeycloakUser {
-  username: string;
-  email: string;
-  enabled?: boolean;
-  firstName?: string;
-  lastName?: string;
-  credentials?: Credential[];
-  attributes?: Record<string, any>;
-}
-
-interface Credential {
-  type: string;
-  value: string;
-  temporary?: boolean;
-}
-
-// Keycloak's built-in type for user representation
-interface UserRepresentation {
-  id?: string;
-  username?: string;
-  email?: string;
-  enabled?: boolean;
-  firstName?: string;
-  lastName?: string;
-  attributes?: Record<string, any>;
 }
